@@ -38,20 +38,11 @@ export default class extends Component {
     this.setState({ songQuery: song });
   }
 
-  handleSubmit(event) {
-
-    event.preventDefault();
-    if (this.state.artistQuery && this.state.songQuery) {
-      console.log(this.state)
-      axios.get(`/api/lyrics/${this.state.artistQuery}/${this.state.songQuery}`)
-        .then(response => {
-          const setLyricsAction = setLyrics(response.data.lyric);
-          store.dispatch(setLyricsAction);
-        })
-        .catch(console.error)
-    }
-
+handleSubmit() {
+  if (this.state.artistQuery && this.state.songQuery) {
+    store.dispatch(fetchLyrics(this.state.artistQuery, this.state.songQuery));
   }
+}
 
   render() {
     return <Lyrics
