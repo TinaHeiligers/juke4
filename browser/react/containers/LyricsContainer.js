@@ -42,13 +42,13 @@ export default class extends Component {
 
     event.preventDefault();
     if (this.state.artistQuery && this.state.songQuery) {
-
+      console.log(this.state)
       axios.get(`/api/lyrics/${this.state.artistQuery}/${this.state.songQuery}`)
         .then(response => {
           const setLyricsAction = setLyrics(response.data.lyric);
           store.dispatch(setLyricsAction);
-        });
-
+        })
+        .catch(console.error)
     }
 
   }
