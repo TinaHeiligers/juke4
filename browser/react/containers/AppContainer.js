@@ -3,6 +3,9 @@ import axios from 'axios';
 import { hashHistory } from 'react-router';
 import store from '../../redux/store'
 import {startPlaying, stopPlaying, setCurrentSong, setCurrentSongList} from '../../redux/action-creators/player'
+import {receiveAlbums, receiveAlbum, getAlbums, getAlbum} from '../../redux/action-creators/albums'
+import {receiveArtists, receiveArtist, getArtists, getArtist} from '../../redux/action-creators/artists'
+
 
 import initialState from '../initialState';
 import AUDIO from '../audio';
@@ -40,8 +43,6 @@ export default class AppContainer extends Component {
 
     Promise
       .all([
-        axios.get('/api/albums/'),
-        axios.get('/api/artists/'),
         axios.get('/api/playlists')
       ])
       .then(res => res.map(r => r.data))
@@ -53,10 +54,8 @@ export default class AppContainer extends Component {
       this.setProgress(AUDIO.currentTime / AUDIO.duration));
   }
 
-  onLoad (albums, artists, playlists) {
+  onLoad (artists, playlists) {
     this.setState({
-      albums: convertAlbums(albums),
-      artists: artists,
       playlists: playlists
     });
   }
@@ -111,17 +110,21 @@ export default class AppContainer extends Component {
   }
 
   selectAlbum (albumId) {
-    axios.get(`/api/albums/${albumId}`)
-      .then(res => res.data)
-      .then(album => this.setState({
-        selectedAlbum: convertAlbum(album)
-      }));
+
+    store.dispatch(getAlbum(albumId))
+    // axios.get(`/api/albums/${albumId}`)
+    //   .then(res => res.data)
+    //   .then(album => this.setState({
+    //     selectedAlbum: convertAlbum(album)
+    //   }));
   }
 
   selectArtist (artistId) {
+    store.dispatch(getArtist(artistId))
+
     Promise
       .all([
-        axios.get(`/api/artists/${artistId}`),
+        // axios.get(`/api/artists/${artistId}`),
         axios.get(`/api/artists/${artistId}/albums`),
         axios.get(`/api/artists/${artistId}/songs`)
       ])
