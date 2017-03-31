@@ -1,3 +1,4 @@
+//action creators
 import { START_PLAYING, STOP_PLAYING, SET_CURRENT_SONG, SET_LIST} from '../constants'
 import axios from 'axios';
 

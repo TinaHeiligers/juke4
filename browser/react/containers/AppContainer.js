@@ -18,7 +18,8 @@ export default class AppContainer extends Component {
 
   constructor (props) {
     super(props);
-    this.state = initialState;
+
+    this.state = Object.assign(initialState, store.getState());
 
     this.toggle = this.toggle.bind(this);
     this.toggleOne = this.toggleOne.bind(this);
@@ -33,6 +34,9 @@ export default class AppContainer extends Component {
   }
 
   componentDidMount () {
+    this.unsubscribe = store.subscribe(() => {
+      this.setState(store.getState());
+    });
 
     Promise
       .all([
@@ -81,13 +85,17 @@ export default class AppContainer extends Component {
 
   toggleOne (selectedSong, selectedSongList) {
     if (selectedSong.id !== this.state.currentSong.id)
-      this.startSong(selectedSong, selectedSongList);
+      store.dispatch(startPlaying(selectedSong, selectedSongList));
     else this.toggle();
   }
 
   toggle () {
-    if (this.state.isPlaying) this.pause();
-    else this.play();
+    if (store.getState().isPlaying) {
+          store.dispatch(stopPlaying)
+        }
+    else {
+      store.dispatch(startPlaying)
+    }
   }
 
   next () {
@@ -206,9 +214,9 @@ export default class AppContainer extends Component {
         }
         </div>
         <Player
-          currentSong={this.state.currentSong}
-          currentSongList={this.state.currentSongList}
-          isPlaying={this.state.isPlaying}
+          currentSong={this.state.player.currentSong}
+          currentSongList={this.state.player.currentSongList}
+          isPlaying={this.state.player.isPlaying}
           progress={this.state.progress}
           next={this.next}
           prev={this.prev}

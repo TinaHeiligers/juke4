@@ -1,3 +1,4 @@
+//reducers
 import {
   START_PLAYING,
   STOP_PLAYING,
