@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { hashHistory } from 'react-router';
+import store from '../../redux/store'
+import {startPlaying, stopPlaying, setCurrentSong, setCurrentSongList} from '../../redux/action-creators/player'
 
 import initialState from '../initialState';
 import AUDIO from '../audio';
@@ -57,21 +59,18 @@ export default class AppContainer extends Component {
 
   play () {
     AUDIO.play();
-    this.setState({ isPlaying: true });
+    store.dispatch(startPlaying);
   }
 
   pause () {
     AUDIO.pause();
-    this.setState({ isPlaying: false });
+    store.dispatch(stopPlaying);
   }
 
   load (currentSong, currentSongList) {
     AUDIO.src = currentSong.audioUrl;
     AUDIO.load();
-    this.setState({
-      currentSong: currentSong,
-      currentSongList: currentSongList
-    });
+    store.dispatch(setCurrentSong, setCurrentSongList)
   }
 
   startSong (song, list) {

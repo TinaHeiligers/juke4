@@ -46,7 +46,7 @@ handleSubmit() {
 
   render() {
     return <Lyrics
-      text={this.state.text}
+      text={this.state.lyrics.text}
       setArtist={this.handleArtistInput}
       setSong={this.handleSongInput}
       artistQuery={this.state.artistQuery}
